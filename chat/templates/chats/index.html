@@ -2,8 +2,11 @@
 <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
 <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 <style>
-form{
+.page-content{
     padding: 100px 100px;
+}
+.color-gray{
+    color:rgb(186, 180, 180)
 }
 </style>
 
@@ -13,7 +16,11 @@ form{
     <header class="mdl-layout__header">
       <div class="mdl-layout__header-row">
         <!-- Title -->
+        {% if request.user.is_authenticated %}
         <span class="mdl-layout-title">Test Chat-App von {{request.user}}</span>
+        {% else %}
+        Please log in!
+        {% endif %}
         <!-- Add spacer, to align navigation to the right -->
         <div class="mdl-layout-spacer"></div>
         <!-- Navigation. We hide it in small screens. -->
@@ -36,6 +43,14 @@ form{
     </div>
     <main class="mdl-layout__content">
       <div class="page-content"><!-- Your content goes here -->
+        {% if request.user.is_authenticated%}
+        {% for message in messages %}
+        <div>
+          <span class="color-gray">[{{message.created_at}}]</span>{{ message.author }}:{{ message.text }}
+        </div>
+        {% endfor %}
+       
+
         <form action="/chat/" method="POST">
             <div class="mdl-textfield mdl-js-textfield">
                 {% csrf_token %}
@@ -46,8 +61,9 @@ form{
                 Send
               </button>
           </form>
-    
-        
+          {% else %}
+          <h1>You are not logged! Please log in <a href="/login">here</a></h1>
+          {% endif %}
     </div>
     </main>
   </div>
