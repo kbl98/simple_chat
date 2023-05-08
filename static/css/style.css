@@ -1,0 +1,20 @@
+.page-content {
+    padding: 100px 100px;
+  }
+  .color-gray {
+    color: rgb(186, 180, 180);
+  }
+  .column {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .center {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
