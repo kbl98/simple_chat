@@ -1,8 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from .models import Chat,Message
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from .forms import  RegisterForm
+from django.http import JsonResponse
+from django.core import serializers
+
 
 # Create your views here.
 @login_required(login_url='/login/')
@@ -11,7 +16,10 @@ def index(request):
     if request.method == 'POST':
         print('This request:'+request.POST['textmessage'])
         myChat = Chat.objects.get(id=1)
-        Message.objects.create(text = request.POST['textmessage'],author=request.user, receiver = request.user, chat = myChat)
+        new_message=Message.objects.create(text = request.POST['textmessage'],author=request.user, receiver = request.user, chat = myChat)
+        serialized_obj=serializers.serialize('json',[new_message,])
+        return JsonResponse(serialized_obj)
+    
     chatMessages = Message.objects.filter(chat__id=1)
     return render(request,'chats/index.html',{'username':'Katja','messages':chatMessages})
 
@@ -27,3 +35,18 @@ def loginindex(request):
             
 
     return render(request,'chats/loginindex.html',{'redirect':redirect})
+
+def signindex(request):
+    if request.method == 'GET':
+        form = RegisterForm()
+        return render(request, 'chats/signindex.html', { 'form': form}) 
+    if request.method == 'POST':
+        form = RegisterForm(request.POST) 
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            login(request, user)
+            return HttpResponseRedirect ('chat/')
+        else:
+            return render(request, 'chats/signindex.html', {'form': form})

@@ -18,3 +18,12 @@
     align-items: center;
     flex-direction: column;
   }
+
+  .gray{
+    color:rgb(143, 139, 139)
+  }
+  .blue{
+    color:rgb(225, 73, 73)
+  }
+
+ 
