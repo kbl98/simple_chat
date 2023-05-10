@@ -8,25 +8,22 @@
         let datum=new Date().toDateString().slice(4)
         fd.append('textmessage',messageField.value)
         fd.append('csrfmiddlewaretoken',token)
-        document.getElementById("message-cont").innerHTML+=`
-        <div id="temporaryMessage">
-      <span class="color-gray">[${datum}]</span>
-      {{ request.user }}:<i class="gray">${messageField.value}</i>
-    </div>
-        `
+       
         try{
-       let response= await fetch('/chat/',{
+          console.log("try1")
+       let response= 
+          await fetch('/chat/',{
             method:'POST',
             body:fd
         })
         console.log('success')
         let json = await response.json()
-        console.log(json)
-        document.getElementById('temporaryMessage').remove()
+        json=JSON.parse(json);
+        datum=new Date(json.fields.created_at).toDateString().slice(4)
         document.getElementById("message-cont").innerHTML+=`
         <div id="temporaryMessage">
       <span class="color-gray">[${datum}]</span>
-      {{ request.user }}:<span style="color:red">${messageField.value}</span>
+      {{ request.user }}:<span style="color:red">${json.fields.text}</span>
     </div>
         `
     }

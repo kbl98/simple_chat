@@ -18,7 +18,8 @@ def index(request):
         myChat = Chat.objects.get(id=1)
         new_message=Message.objects.create(text = request.POST['textmessage'],author=request.user, receiver = request.user, chat = myChat)
         serialized_obj=serializers.serialize('json',[new_message,])
-        return JsonResponse(serialized_obj)
+        print (JsonResponse(serialized_obj,safe=False))
+        return JsonResponse(serialized_obj[1:-1],safe=False)
     
     chatMessages = Message.objects.filter(chat__id=1)
     return render(request,'chats/index.html',{'username':'Katja','messages':chatMessages})
